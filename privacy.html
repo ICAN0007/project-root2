@@ -1,0 +1,115 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script data-goatcounter="https://9023.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <style>
+        body {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30v4h2v-4h4v-2h-4V0h-2v2h-4v2h4zM6 34v4h4v-4h2v-4h-2v-4H6v4H2v2h4zm0-30v4h-4v2h4v4h2V6h4V4H6V0H4v4H0v2h4z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        }
+        nav, footer {
+            background: #0f172a;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Navbar -->
+    <nav class="text-white p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/" class="text-xl font-bold"><i class="fas fa-home mr-2"></i>Video Gallery</a>
+            </div>
+            <div class="hidden md:flex space-x-4">
+                <a href="/" class="hover:text-gray-300">Home</a>
+                <a href="/privacy" class="hover:text-gray-300">Privacy</a>
+                <a href="/terms" class="hover:text-gray-300">Terms</a>
+                <a href="https://t.me/exclusiveclips4" target="_blank" class="hover:text-gray-300"><i class="fab fa-telegram mr-1"></i>Join Telegram</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 p-4">
+            <a href="/" class="block py-2 hover:text-gray-300">Home</a>
+            <a href="/privacy" class="block py-2 hover:text-gray-300">Privacy</a>
+            <a href="/terms" class="block py-2 hover:text-gray-300">Terms</a>
+            <a href="https://t.me/exclusiveclips4" target="_blank" class="block py-2 hover:text-gray-300"><i class="fab fa-telegram mr-1"></i>Join Telegram</a>
+        </div>
+    </nav>
+
+    <!-- Privacy Policy -->
+    <div class="max-w-7xl mx-auto py-8 px-4">
+        <h1 class="text-3xl font-bold mb-6 text-white">Privacy Policy</h1>
+        <p class="mb-4">Your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your information when you visit our website.</p>
+        <h2 class="text-2xl font-semibold mb-2 text-white">Information We Collect</h2>
+        <p class="mb-4">We use GoatCounter to collect anonymous usage data, such as page views, to improve our website. No personal information is collected.</p>
+        <h2 class="text-2xl font-semibold mb-2 text-white">Cookies</h2>
+        <p class="mb-4">Our website does not use cookies or similar tracking technologies beyond GoatCounter's analytics.</p>
+        <h2 class="text-2xl font-semibold mb-2 text-white">Third-Party Links</h2>
+        <p class="mb-4">Our website contains links to external sites, such as our Telegram channel (<a href="https://t.me/exclusiveclips4" target="_blank" class="text-blue-400 hover:underline">t.me/exclusiveclips4</a>). We are not responsible for the privacy practices of these sites.</p>
+        <h2 class="text-2xl font-semibold mb-2 text-white">Contact Us</h2>
+        <p class="mb-4">If you have any questions about this Privacy Policy, please contact us via our Telegram channel: <a href="https://t.me/exclusiveclips4" target="_blank" class="text-blue-400 hover:underline">t.me/exclusiveclips4</a>.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-white p-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>© 2025 Video Gallery. All rights reserved.</p>
+            <p class="mt-2">
+                <a href="https://t.me/exclusiveclips4" target="_blank" class="hover:text-gray-300"><i class="fab fa-telegram mr-1"></i>Join our Telegram</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

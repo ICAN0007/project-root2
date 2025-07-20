@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExclusiveClips4</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="text-2xl">🏠</a>
+    <div class="hamburger" id="hamburger">☰</div>
+    <div class="menu" id="menu">
+      <a href="index.html">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms & Conditions</a>
+    </div>
+  </nav>
+  <main class="pt-20 container">
+    <input type="text" id="search" class="search-bar" placeholder="Search videos...">
+    <div class="filter-bar" id="filter-bar"></div>
+    <div id="video-grid" class="grid grid-cols-2 md:grid-cols-3"></div>
+    <div class="mt-6 text-center">
+      <button id="prevPage">Prev</button>
+      <button id="nextPage">Next</button>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
