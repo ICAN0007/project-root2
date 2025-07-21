@@ -8,17 +8,31 @@ const grid = document.getElementById('video-grid');
 const filterBar = document.getElementById('filter-bar');
 const searchInput = document.getElementById('search');
 
+// Render Videos
 function renderVideos() {
   grid.innerHTML = '';
   let filtered = videos;
+
+  // Filter by category
   if (currentCategory) {
     filtered = filtered.filter(v => v.categories.includes(currentCategory));
   }
+
+  // Filter by search
   if (searchQuery) {
-    filtered = filtered.filter(v => v.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    const query = searchQuery.toLowerCase();
+    filtered = filtered.filter(v =>
+      v.title.toLowerCase().includes(query) ||
+      v.categories.some(cat => cat.toLowerCase().includes(query)) ||
+      v.tags?.some(tag => tag.toLowerCase().includes(query))
+    );
   }
+
+  // Pagination
   const start = (currentPage - 1) * itemsPerPage;
   const paginated = filtered.slice(start, start + itemsPerPage);
+
+  // Create video cards
   paginated.forEach(v => {
     const card = document.createElement('div');
     card.className = "bg-gray-800 rounded shadow overflow-hidden hover:shadow-lg transition";
@@ -33,10 +47,12 @@ function renderVideos() {
     `;
     grid.appendChild(card);
   });
+
   document.getElementById('prevPage').disabled = currentPage === 1;
   document.getElementById('nextPage').disabled = (start + itemsPerPage) >= filtered.length;
 }
 
+// Render Filters
 function renderFilters() {
   const categories = [...new Set(videos.flatMap(v => v.categories))];
   filterBar.innerHTML = '';
@@ -54,19 +70,35 @@ function renderFilters() {
   });
 }
 
-document.getElementById('prevPage').onclick = () => { if (currentPage > 1) { currentPage--; renderVideos(); } };
-document.getElementById('nextPage').onclick = () => { currentPage++; renderVideos(); };
-searchInput.oninput = (e) => { searchQuery = e.target.value; currentPage = 1; renderVideos(); };
+// Pagination buttons
+document.getElementById('prevPage').onclick = () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderVideos();
+  }
+};
+document.getElementById('nextPage').onclick = () => {
+  currentPage++;
+  renderVideos();
+};
 
+// Search
+searchInput.oninput = (e) => {
+  searchQuery = e.target.value.trim();
+  currentPage = 1;
+  renderVideos();
+};
+
+// Fetch videos
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
-    videos = data.sort((a,b) => new Date(b.addedAt) - new Date(a.addedAt));
+    videos = data.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
     renderFilters();
     renderVideos();
   });
 
-// Hamburger
+// Hamburger Menu
 document.getElementById('hamburger').onclick = () => {
-  document.getElementById('menu').classList.toggle('show');
+  document.getElementById('menu').classList.toggle('hidden');
 };
