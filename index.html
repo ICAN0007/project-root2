@@ -12,25 +12,12 @@
 <body class="bg-black text-white font-sans">
 
   <!-- Navbar -->
- <nav class="bg-gray-900 text-white p-4 fixed top-0 left-0 w-full z-50">
-  <div class="flex justify-between items-center">
-    <div class="flex items-center gap-4">
-      <button id="hamburger" class="text-2xl focus:outline-none">☰</button>
+  <nav class="bg-gray-900 text-white p-4 fixed top-0 left-0 w-full z-50">
+    <div class="flex justify-between items-center">
       <a href="index.html" class="text-2xl">🏠</a>
-    </div>
-    <div>
       <a href="https://t.me/exclusiveclips4" target="_blank" class="text-2xl">📢</a>
     </div>
-  </div>
-
-  <!-- Dropdown Menu -->
-  <div id="menu" class="hidden">
-    <a href="index.html">Home</a>
-    <a href="#categories">Categories</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="terms.html">Terms & Conditions</a>
-  </div>
-</nav>
+  </nav>
 
   <!-- Main Content -->
   <main class="pt-24 container mx-auto px-4">
@@ -43,12 +30,16 @@
     </div>
   </main>
 
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white p-4 mt-8 text-center">
+    <p>© 2025 ExclusiveClips4. All rights reserved.</p>
+    <div class="mt-2 space-x-4">
+      <a href="privacy.html" class="hover:text-blue-400">Privacy Policy</a>
+      <a href="terms.html" class="hover:text-blue-400">Terms & Conditions</a>
+    </div>
+  </footer>
+
   <script src="script.js"></script>
-  <script>
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('menu').classList.toggle('hidden');
-    });
-  </script>
 </body>
 </html>
 
