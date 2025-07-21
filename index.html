@@ -12,28 +12,25 @@
 <body class="bg-black text-white font-sans">
 
   <!-- Navbar -->
-  <nav class="text-white p-4 fixed top-0 left-0 w-full z-50 bg-gray-900">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <!-- Left icons (Hamburger + Home) -->
-      <div class="flex items-center gap-4">
-        <button id="hamburger" class="text-2xl focus:outline-none">☰</button>
-        <a href="index.html" class="text-2xl">🏠</a>
-      </div>
-
-      <!-- Right icon (Telegram) -->
-      <div class="flex items-center">
-        <a href="https://t.me/exclusiveclips4" target="_blank" class="text-2xl">📢</a>
-      </div>
+ <nav class="bg-gray-900 text-white p-4 fixed top-0 left-0 w-full z-50">
+  <div class="flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <button id="hamburger" class="text-2xl focus:outline-none">☰</button>
+      <a href="index.html" class="text-2xl">🏠</a>
     </div>
-
-    <!-- Mobile Menu -->
-    <div id="menu" class="hidden absolute left-0 top-full bg-gray-800 w-full p-4">
-      <a href="index.html" class="block py-2 hover:text-blue-400">Home</a>
-      <a href="#categories" class="block py-2 hover:text-blue-400">Categories</a>
-      <a href="privacy.html" class="block py-2 hover:text-blue-400">Privacy Policy</a>
-      <a href="terms.html" class="block py-2 hover:text-blue-400">Terms & Conditions</a>
+    <div>
+      <a href="https://t.me/exclusiveclips4" target="_blank" class="text-2xl">📢</a>
     </div>
-  </nav>
+  </div>
+
+  <!-- Dropdown Menu -->
+  <div id="menu" class="hidden">
+    <a href="index.html">Home</a>
+    <a href="#categories">Categories</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms & Conditions</a>
+  </div>
+</nav>
 
   <!-- Main Content -->
   <main class="pt-24 container mx-auto px-4">
