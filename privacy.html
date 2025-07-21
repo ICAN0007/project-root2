@@ -3,55 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Privacy Policy - ExclusiveClips4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script data-goatcounter="https://9023.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script data-goatcounter="https://exclusiveclips4.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <style>
-        body {
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30v4h2v-4h4v-2h-4V0h-2v2h-4v2h4zM6 34v4h4v-4h2v-4h-2v-4H6v4H2v2h4zm0-30v4h-4v2h4v4h2V6h4V4H6V0H4v4H0v2h4z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+        body, html {
+            background-color: #000 !important;
+            color: #fff !important;
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
         nav, footer {
-            background: #0f172a;
+            background-color: #000 !important;
+        }
+        section {
+            background-color: #000 !important;
+        }
+        a {
+            color: #00bfff;
+        }
+        a:hover {
+            color: #1ec8ff;
         }
     </style>
 </head>
 <body class="font-sans">
 
     <!-- Navbar -->
-    <nav class="text-white p-4 sticky top-0 z-50 bg-gray-900">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl">🏠</a>
-            <a href="https://t.me/exclusiveclips4" target="_blank" class="text-2xl">📢</a>
+    <nav class="bg-black text-white p-4 fixed w-full top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">ExclusiveClips4</h1>
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="text-white text-2xl"><i class="fas fa-home"></i></a>
+                <button id="hamburger" class="text-white md:hidden">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            <ul id="nav-menu" class="hidden md:flex md:space-x-6">
+                <li><a href="index.html" class="hover:text-blue-400">Home</a></li>
+                <li><a href="#categories" class="hover:text-blue-400">Categories</a></li>
+                <li><a href="privacy.html" class="hover:text-blue-400">Privacy Policy</a></li>
+                <li><a href="terms.html" class="hover:text-blue-400">Terms & Conditions</a></li>
+            </ul>
         </div>
+        <ul id="mobile-menu" class="hidden bg-black text-white p-4">
+            <li><a href="index.html" class="block py-2 hover:text-blue-400">Home</a></li>
+            <li><a href="privacy.html" class="block py-2 hover:text-blue-400">Privacy Policy</a></li>
+            <li><a href="terms.html" class="block py-2 hover:text-blue-400">Terms & Conditions</a></li>
+        </ul>
     </nav>
 
-    <!-- Privacy Policy -->
-    <div class="max-w-7xl mx-auto py-8 px-4">
-        <h1 class="text-3xl font-bold mb-6 text-white">Privacy Policy</h1>
-        <p class="mb-4">Your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your information when you visit our website.</p>
-        <h2 class="text-2xl font-semibold mb-2 text-white">Information We Collect</h2>
-        <p class="mb-4">We use GoatCounter to collect anonymous usage data, such as page views, to improve our website. No personal information is collected.</p>
-        <h2 class="text-2xl font-semibold mb-2 text-white">Cookies</h2>
-        <p class="mb-4">Our website does not use cookies or similar tracking technologies beyond GoatCounter's analytics.</p>
-        <h2 class="text-2xl font-semibold mb-2 text-white">Third-Party Links</h2>
-        <p class="mb-4">Our website contains links to external sites, such as our Telegram channel (<a href="https://t.me/exclusiveclips4" target="_blank" class="text-blue-400 hover:underline">t.me/exclusiveclips4</a>). We are not responsible for the privacy practices of these sites.</p>
-        <h2 class="text-2xl font-semibold mb-2 text-white">Contact Us</h2>
-        <p class="mb-4">If you have any questions about this Privacy Policy, please contact us via our Telegram channel: <a href="https://t.me/exclusiveclips4" target="_blank" class="text-blue-400 hover:underline">t.me/exclusiveclips4</a>.</p>
-    </div>
+    <!-- Privacy Policy Section -->
+    <section class="pt-20 py-10 bg-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-6">Privacy Policy</h2>
+            <div class="text-lg text-gray-300">
+                <p class="mb-4">Your privacy is important to us. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website.</p>
+
+                <h3 class="text-xl font-semibold mb-2">Information We Collect</h3>
+                <p class="mb-4">We use GoatCounter to collect anonymous data, such as page views and basic usage statistics, to improve our services. We do not collect any personal information.</p>
+
+                <h3 class="text-xl font-semibold mb-2">Cookies</h3>
+                <p class="mb-4">Our site does not use cookies or similar tracking technologies beyond GoatCounter's analytics.</p>
+
+                <h3 class="text-xl font-semibold mb-2">Third-Party Links</h3>
+                <p class="mb-4">Our website contains links to external websites, including our <a href="https://t.me/exclusiveclips4" target="_blank" class="text-blue-400 hover:underline">Telegram channel</a>. We are not responsible for their privacy practices.</p>
+
+                <h3 class="text-xl font-semibold mb-2">Contact Us</h3>
+                <p class="mb-4">If you have questions about this Privacy Policy, you can contact us via our <a href="https://t.me/exclusiveclips4" target="_blank" class="text-blue-400 hover:underline">Telegram channel</a>.</p>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="text-white p-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <p>© 2025 Video Gallery. All rights reserved.</p>
-            <div class="mt-2 space-x-4">
-                <a href="privacy.html" class="hover:text-blue-400">Privacy Policy</a>
-                <a href="terms.html" class="hover:text-blue-400">Terms & Conditions</a>
+    <footer class="bg-black text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 ExclusiveClips4. All rights reserved.</p>
+            <div class="mt-2">
+                <a href="https://t.me/exclusiveclips4" class="hover:text-blue-400 mx-2">
+                    <i class="fab fa-telegram-plane"></i> Join us on Telegram
+                </a>
+                <a href="privacy.html" class="hover:text-blue-400 mx-2">Privacy Policy</a>
+                <a href="terms.html" class="hover:text-blue-400 mx-2">Terms & Conditions</a>
             </div>
         </div>
     </footer>
 
+    <script>
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
+
