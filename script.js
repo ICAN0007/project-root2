@@ -1,93 +1,102 @@
-const videosPerPage = 10;
+let videos = [];
+let filteredVideos = [];
 let currentPage = 1;
-let allVideos = [];
+const itemsPerPage = 10;
 
-function loadVideos() {
-  // Example dummy data
-  allVideos = Array.from({ length: 43 }, (_, i) => ({
-    title: `Video Title ${i + 1}`,
-    thumbnail: `https://via.placeholder.com/640x360?text=Thumbnail+${i + 1}`,
-    link: `video.html?id=${i + 1}`
-  }));
-  displayVideos();
-  displayPagination();
+async function loadVideos() {
+  try {
+    const res = await fetch('videos.json');
+    const data = await res.json();
+    videos = data.reverse(); // latest first
+    filteredVideos = videos;
+    displayVideos(currentPage);
+    setupPagination();
+  } catch (error) {
+    console.error("Failed to load videos:", error);
+  }
 }
 
-function displayVideos() {
-  const grid = document.getElementById("videoGrid");
-  grid.innerHTML = "";
+function displayVideos(page) {
+  const videoGrid = document.getElementById("videoGrid");
+  videoGrid.innerHTML = "";
 
-  const start = (currentPage - 1) * videosPerPage;
-  const end = start + videosPerPage;
-  const currentVideos = allVideos.slice(start, end);
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const videosToShow = filteredVideos.slice(start, end);
 
-  currentVideos.forEach(video => {
-    const videoEl = document.createElement("div");
-    videoEl.className = "video-item";
-    videoEl.innerHTML = `
-      <a href="${video.link}">
+  if (videosToShow.length === 0) {
+    videoGrid.innerHTML = "<p>No videos found.</p>";
+    return;
+  }
+
+  videosToShow.forEach(video => {
+    const card = document.createElement("div");
+    card.className = "video-card";
+    card.innerHTML = `
+      <a href="video.html?vid=${video.id}">
         <img src="${video.thumbnail}" alt="${video.title}" />
         <div class="video-title">${video.title}</div>
       </a>
     `;
-    grid.appendChild(videoEl);
+    videoGrid.appendChild(card);
   });
 }
 
-function displayPagination() {
-  const totalPages = Math.ceil(allVideos.length / videosPerPage);
+function setupPagination() {
+  const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
 
-  const start = Math.max(1, currentPage - 1);
-  const end = Math.min(totalPages, start + 2);
+  let maxVisible = 3;
+  let start = Math.max(1, currentPage - 1);
+  let end = Math.min(totalPages, start + maxVisible - 1);
+
+  if (start > 1) {
+    pagination.appendChild(createPageButton("1"));
+    if (start > 2) pagination.appendChild(createEllipsis());
+  }
 
   for (let i = start; i <= end; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    btn.className = i === currentPage ? "active" : "";
-    btn.onclick = () => {
-      currentPage = i;
-      displayVideos();
-      displayPagination();
-    };
-    pagination.appendChild(btn);
+    pagination.appendChild(createPageButton(i));
   }
 
   if (end < totalPages) {
-    const nextBtn = document.createElement("button");
-    nextBtn.textContent = "Next";
-    nextBtn.onclick = () => {
-      currentPage++;
-      displayVideos();
-      displayPagination();
-    };
-    pagination.appendChild(nextBtn);
+    if (end < totalPages - 1) pagination.appendChild(createEllipsis());
+    pagination.appendChild(createPageButton(totalPages));
   }
 }
 
-function handleSearch(value) {
-  const query = value.toLowerCase();
-  const filtered = allVideos.filter(video => video.title.toLowerCase().includes(query));
-  const grid = document.getElementById("videoGrid");
-  grid.innerHTML = "";
+function createPageButton(page) {
+  const btn = document.createElement("button");
+  btn.textContent = page;
+  btn.className = "page-btn";
+  if (parseInt(page) === currentPage) btn.classList.add("active");
 
-  filtered.forEach(video => {
-    const videoEl = document.createElement("div");
-    videoEl.className = "video-item";
-    videoEl.innerHTML = `
-      <a href="${video.link}">
-        <img src="${video.thumbnail}" alt="${video.title}" />
-        <div class="video-title">${video.title}</div>
-      </a>
-    `;
-    grid.appendChild(videoEl);
+  btn.addEventListener("click", () => {
+    currentPage = parseInt(page);
+    displayVideos(currentPage);
+    setupPagination();
   });
 
-  document.getElementById("pagination").style.display = filtered.length === allVideos.length ? "block" : "none";
+  return btn;
 }
 
-window.onload = loadVideos;
+function createEllipsis() {
+  const span = document.createElement("span");
+  span.textContent = "...";
+  span.style.color = "#999";
+  return span;
+}
+
+function handleSearch(query) {
+  query = query.toLowerCase();
+  filteredVideos = videos.filter(video => video.title.toLowerCase().includes(query));
+  currentPage = 1;
+  displayVideos(currentPage);
+  setupPagination();
+}
+
+loadVideos();
 
 
 
