@@ -1,3 +1,4 @@
+/* Reset and basics */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -5,6 +6,12 @@ body {
   color: #fff;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Navigation */
 nav {
   display: flex;
   justify-content: space-between;
@@ -19,21 +26,58 @@ nav {
 
 .home-icon {
   font-size: 28px;
-  text-decoration: none;
-  color: #fff;
 }
 
-.nav-links a {
-  margin-left: 20px;
-  text-decoration: none;
+.menu {
+  display: flex;
+  gap: 20px;
+}
+
+.menu a {
   color: #bbb;
   font-weight: bold;
 }
 
-.container {
-  padding: 100px 20px 40px;
+.menu.show {
+  display: flex;
 }
 
+.hamburger {
+  font-size: 26px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .hamburger {
+    display: block;
+  }
+  .menu {
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: #222;
+    border-radius: 8px;
+    padding: 10px;
+    display: none;
+  }
+  .menu.show {
+    display: flex;
+  }
+}
+
+/* Container and content */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 100px 15px 40px;
+}
+
+/* Search bar */
 .search-bar {
   width: 100%;
   padding: 10px;
@@ -41,14 +85,17 @@ nav {
   border: none;
   margin-bottom: 20px;
   font-size: 16px;
+  color: #333;
 }
 
+/* Video grid */
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 15px;
 }
 
+/* Video cards */
 .video-card {
   background: #1a1a1a;
   border-radius: 10px;
@@ -58,8 +105,10 @@ nav {
   transition: transform 0.2s;
 }
 
-.video-card:hover {
+.video-card:hover,
+.video-card-link:focus .video-card {
   transform: scale(1.03);
+  outline: none;
 }
 
 .video-thumb {
@@ -75,6 +124,7 @@ nav {
   font-weight: bold;
 }
 
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -91,9 +141,130 @@ nav {
   background-color: #333;
   color: #fff;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.pagination button.active {
+.pagination button.active,
+.pagination button:hover {
+  background-color: #ff4747;
+  color: #fff;
+}
+
+/* Category filters */
+.category-filters {
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.category-btn:hover {
   background-color: #ff4747;
 }
 
+.category-btn.active {
+  background-color: #ff4747;
+}
+
+/* Related videos on video page */
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 1em;
+}
+
+.related-video-link .video-title {
+  font-size: 14px;
+  padding: 8px;
+}
+
+/* Video duration and description */
+.video-duration,
+.video-description {
+  color: #bbb;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* No results */
+.no-results {
+  text-align: center;
+  color: #ff4747;
+  margin: 40px 0;
+  font-size: 18px;
+}
+
+/* Modal for age confirmation */
+.modal {
+  position: fixed;
+  z-index: 2000;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #222;
+  border-radius: 12px;
+  padding: 2em 1.5em;
+  max-width: 320px;
+}
+
+.btn-primary,
+.btn-secondary {
+  margin: 10px 5px 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #ff4747;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #e03e3e;
+}
+
+.btn-secondary {
+  background-color: #555;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #777;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .container {
+    padding: 70px 10px 20px;
+  }
+  .video-thumb {
+    height: 80px;
+  }
+}
