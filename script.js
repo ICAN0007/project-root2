@@ -1,121 +1,110 @@
-let videos = [];
 let currentPage = 1;
-const itemsPerPage = 10;
-let currentCategory = null;
-let searchQuery = '';
+const videosPerPage = 10;
+let videos = [];
 
-const grid = document.getElementById('video-grid');
-const filterBar = document.getElementById('filter-bar');
-const searchInput = document.getElementById('search');
+async function fetchVideos() {
+  try {
+    const response = await fetch('videos.json');
+    videos = await response.json();
+    renderVideos();
+    renderPagination();
+  } catch (error) {
+    console.error('Failed to load videos:', error);
+  }
+}
 
-// Track if footer links already added
-let footerLinksAdded = false;
-
-// Render Videos
 function renderVideos() {
-  grid.innerHTML = '';
-  let filtered = videos;
+  const videoGrid = document.getElementById('video-grid');
+  videoGrid.innerHTML = '';
 
-  // Filter by category
-  if (currentCategory) {
-    filtered = filtered.filter(v => v.categories.includes(currentCategory));
-  }
+  const start = (currentPage - 1) * videosPerPage;
+  const end = start + videosPerPage;
+  const videosToDisplay = videos.slice(start, end);
 
-  // Filter by search
-  if (searchQuery) {
-    const query = searchQuery.toLowerCase();
-    filtered = filtered.filter(v =>
-      v.title.toLowerCase().includes(query) ||
-      v.categories.some(cat => cat.toLowerCase().includes(query)) ||
-      v.tags?.some(tag => tag.toLowerCase().includes(query))
-    );
-  }
+  videosToDisplay.forEach(video => {
+    const videoCard = document.createElement('div');
+    videoCard.className = 'bg-gray-800 rounded overflow-hidden shadow-lg';
 
-  // Pagination
-  const start = (currentPage - 1) * itemsPerPage;
-  const paginated = filtered.slice(start, start + itemsPerPage);
-
-  // Create video cards
-  paginated.forEach(v => {
-    const card = document.createElement('div');
-    card.className = "bg-gray-800 rounded shadow overflow-hidden hover:shadow-lg transition";
-    card.innerHTML = `
-      <a href="video.html?id=${v.id}">
-        <img src="${v.thumb}" alt="${v.title}" style="width: 510px; height: 290px; object-fit: cover;">
-        <div class="p-2">
-          <h3 class="font-bold text-sm truncate">${v.title}</h3>
-          <p class="text-xs">${v.categories.join(", ")}</p>
-        </div>
+    videoCard.innerHTML = `
+      <a href="${video.url}" target="_blank">
+        <img src="${video.thumbnail}" alt="${video.title}" class="w-full object-cover" style="width:510px; height:290px;">
+        <div class="p-2 text-center">${video.title}</div>
       </a>
     `;
-    grid.appendChild(card);
+
+    videoGrid.appendChild(videoCard);
   });
 
-  // Pagination buttons
-  document.getElementById('prevPage').disabled = currentPage === 1;
-  document.getElementById('nextPage').disabled = (start + itemsPerPage) >= filtered.length;
-
-  // Add footer links once
-  if (!footerLinksAdded) {
-    const links = document.createElement('div');
-    links.className = 'text-center text-sm text-gray-400 mt-6 mb-4';
-    links.innerHTML = `
-      <a href="privacy.html" class="hover:underline">Privacy Policy</a> • 
-      <a href="terms.html" class="hover:underline">Terms & Conditions</a>
-    `;
-    grid.parentNode.appendChild(links);
-    footerLinksAdded = true;
-  }
+  const showMoreDiv = document.createElement('div');
+  showMoreDiv.className = 'col-span-full mt-6 text-center';
+  showMoreDiv.innerHTML = `
+    <a href="index.html" class="text-blue-400 underline">Show more from homepage</a>
+  `;
+  videoGrid.appendChild(showMoreDiv);
 }
 
-// Render Filters
-function renderFilters() {
-  const categories = [...new Set(videos.flatMap(v => v.categories))];
-  filterBar.innerHTML = '';
-  categories.forEach(cat => {
-    const tag = document.createElement('span');
-    tag.className = 'filter-tag' + (cat === currentCategory ? ' active' : '');
-    tag.textContent = cat;
-    tag.onclick = () => {
-      currentCategory = currentCategory === cat ? null : cat;
-      currentPage = 1;
-      renderFilters();
+function renderPagination() {
+  const paginationDiv = document.querySelector('.pagination');
+  if (!paginationDiv) {
+    const newPaginationDiv = document.createElement('div');
+    newPaginationDiv.className = 'pagination flex justify-center mt-6 space-x-2';
+    document.querySelector('main').appendChild(newPaginationDiv);
+  } else {
+    paginationDiv.innerHTML = '';
+  }
+
+  const totalPages = Math.ceil(videos.length / videosPerPage);
+
+  const pagination = document.querySelector('.pagination');
+
+  const prevBtn = document.createElement('button');
+  prevBtn.textContent = 'Prev';
+  prevBtn.className = 'px-3 py-1 bg-gray-700 rounded hover:bg-gray-600';
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.onclick = () => {
+    if (currentPage > 1) {
+      currentPage--;
       renderVideos();
+      renderPagination();
+    }
+  };
+  pagination.appendChild(prevBtn);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageBtn = document.createElement('button');
+    pageBtn.textContent = i;
+    pageBtn.className = `px-3 py-1 rounded ${i === currentPage ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`;
+    pageBtn.onclick = () => {
+      currentPage = i;
+      renderVideos();
+      renderPagination();
     };
-    filterBar.appendChild(tag);
-  });
+    pagination.appendChild(pageBtn);
+  }
+
+  const nextBtn = document.createElement('button');
+  nextBtn.textContent = 'Next';
+  nextBtn.className = 'px-3 py-1 bg-gray-700 rounded hover:bg-gray-600';
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.onclick = () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderVideos();
+      renderPagination();
+    }
+  };
+  pagination.appendChild(nextBtn);
 }
 
-// Pagination buttons
-document.getElementById('prevPage').onclick = () => {
-  if (currentPage > 1) {
-    currentPage--;
-    renderVideos();
-  }
-};
-document.getElementById('nextPage').onclick = () => {
-  currentPage++;
-  renderVideos();
-};
-
-// Search
-searchInput.oninput = (e) => {
-  searchQuery = e.target.value.trim();
+document.getElementById('search').addEventListener('input', (e) => {
+  const keyword = e.target.value.toLowerCase();
+  const filtered = videos.filter(v => v.title.toLowerCase().includes(keyword));
   currentPage = 1;
+  videos = filtered;
   renderVideos();
-};
+  renderPagination();
+});
 
-// Fetch videos
-fetch('videos.json')
-  .then(res => res.json())
-  .then(data => {
-    videos = data.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
-    renderFilters();
-    renderVideos();
-  });
+window.onload = fetchVideos;
 
-// Hamburger Menu
-document.getElementById('hamburger').onclick = () => {
-  document.getElementById('menu').classList.toggle('hidden');
-};
 
