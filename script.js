@@ -8,6 +8,9 @@ const grid = document.getElementById('video-grid');
 const filterBar = document.getElementById('filter-bar');
 const searchInput = document.getElementById('search');
 
+// Track if footer links already added
+let footerLinksAdded = false;
+
 // Render Videos
 function renderVideos() {
   grid.innerHTML = '';
@@ -48,8 +51,21 @@ function renderVideos() {
     grid.appendChild(card);
   });
 
+  // Pagination buttons
   document.getElementById('prevPage').disabled = currentPage === 1;
   document.getElementById('nextPage').disabled = (start + itemsPerPage) >= filtered.length;
+
+  // Add footer links once
+  if (!footerLinksAdded) {
+    const links = document.createElement('div');
+    links.className = 'text-center text-sm text-gray-400 mt-6 mb-4';
+    links.innerHTML = `
+      <a href="privacy.html" class="hover:underline">Privacy Policy</a> • 
+      <a href="terms.html" class="hover:underline">Terms & Conditions</a>
+    `;
+    grid.parentNode.appendChild(links);
+    footerLinksAdded = true;
+  }
 }
 
 // Render Filters
@@ -102,3 +118,4 @@ fetch('videos.json')
 document.getElementById('hamburger').onclick = () => {
   document.getElementById('menu').classList.toggle('hidden');
 };
+
