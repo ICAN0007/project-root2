@@ -7,27 +7,24 @@
   <title>Video Gallery</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="dark-theme">
+<body>
   <nav>
-    <div class="logo">🔥 Video Gallery</div>
-    <!-- Removed hamburger and extra menu -->
+    <a href="index.html" class="text-2xl">🏠</a>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="menu" id="menu">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
   </nav>
 
   <div class="container" style="margin-top: 80px;">
-    <input type="text" placeholder="Search..." class="search-bar" oninput="handleSearch(this.value)" />
+    <input type="text" placeholder="Search..." class="search-bar" oninput="handleSearch(this.value)" id="searchInput" />
+    
+    <div id="videoGrid" class="grid grid-cols-2 md:grid-cols-3 mt-6"></div>
 
-    <div id="videoGrid" class="video-grid"></div>
-
-    <!-- Pagination -->
-    <div id="pagination" class="pagination"></div>
+    <div id="pagination" style="text-align:center; margin-top: 1rem;"></div>
   </div>
 
-  <!-- Footer with Privacy & Terms -->
-  <footer>
-    <p><a href="privacy.html" target="_blank">Privacy Policy</a> | <a href="terms.html" target="_blank">Terms of Service</a></p>
-  </footer>
-
-  <script src="videos.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
