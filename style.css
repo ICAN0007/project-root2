@@ -1,6 +1,6 @@
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
+  margin: 0;
   background-color: #111;
   color: #fff;
 }
@@ -9,87 +9,101 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #222;
-  padding: 1rem;
+  background: #1c1c1c;
+  padding: 15px 25px;
   position: fixed;
-  width: 100%;
   top: 0;
-  z-index: 10;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid #333;
 }
 
-.nav-left a, .nav-right a {
-  color: #fff;
+.home-icon {
+  font-size: 28px;
   text-decoration: none;
-  font-size: 20px;
-  margin: 0 10px;
+  color: #fff;
 }
 
-.nav-right a:hover {
-  text-decoration: underline;
+.right-nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #ccc;
+  font-size: 16px;
+}
+
+.right-nav a:hover {
+  color: #fff;
 }
 
 .container {
   padding: 100px 20px 40px;
-  max-width: 1000px;
+  max-width: 800px;
   margin: auto;
 }
 
 .search-bar {
   width: 100%;
-  padding: 12px 15px;
+  padding: 12px;
   font-size: 16px;
-  margin-bottom: 20px;
   border-radius: 8px;
   border: none;
+  margin-bottom: 20px;
+  background-color: #222;
+  color: white;
 }
 
 .video-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.video-card {
-  background-color: #1a1a1a;
-  padding: 10px;
+.video-item {
+  background: #1a1a1a;
+  padding: 15px;
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
-  transition: 0.3s;
+  box-shadow: 0 0 5px rgba(255,255,255,0.1);
+  transition: transform 0.2s ease;
 }
 
-.video-card:hover {
-  transform: scale(1.02);
+.video-item:hover {
+  transform: scale(1.01);
 }
 
-.video-card video {
+.video-item img {
   width: 100%;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
-.video-card h4 {
-  margin: 10px 0 5px;
+.video-title {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #00ccff;
+  text-shadow: 1px 1px 3px #000;
 }
 
 .pagination {
-  text-align: center;
   margin-top: 30px;
+  text-align: center;
 }
 
 .pagination button {
-  background-color: #333;
-  border: 1px solid #555;
-  color: #fff;
+  background-color: #222;
+  color: #ccc;
+  border: 1px solid #333;
+  padding: 8px 14px;
   margin: 0 5px;
-  padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 15px;
 }
 
-.pagination button.active,
-.pagination button:hover {
-  background-color: #08f;
-  color: #fff;
+.pagination button:hover,
+.pagination button.active {
+  background-color: #00ccff;
+  color: #000;
+  font-weight: bold;
 }
+
 
