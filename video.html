@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Watch Video</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <nav>
@@ -16,27 +16,32 @@
       <a href="terms.html">Terms & Conditions</a>
     </div>
   </nav>
+
   <main class="pt-20 container">
     <video id="video-player" class="video-player" controls></video>
     <h2 id="video-title" class="text-3xl mt-6"></h2>
     <h3 class="text-3xl mt-6">Related Videos</h3>
     <div id="related-videos" class="related-grid"></div>
   </main>
+
   <script>
     const menu = document.getElementById('menu');
     document.getElementById('hamburger').onclick = () => menu.classList.toggle('show');
+
     fetch('videos.json')
       .then(res => res.json())
       .then(videos => {
         const params = new URLSearchParams(window.location.search);
         const videoId = params.get('id');
         const video = videos.find(v => v.id === videoId);
+
         if (video) {
           document.getElementById('video-player').src = video.src;
           document.getElementById('video-title').textContent = video.title;
         }
+
         const relatedDiv = document.getElementById('related-videos');
-        const related = videos.filter(v => v.id !== videoId).sort(() => 0.5 - Math.random()).slice(0,6);
+        const related = videos.filter(v => v.id !== videoId).sort(() => 0.5 - Math.random()).slice(0, 6);
         related.forEach(v => {
           const card = document.createElement('div');
           card.innerHTML = `<a href="video.html?id=${v.id}">
