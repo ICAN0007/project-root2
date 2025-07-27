@@ -7,29 +7,27 @@
   <title>Video Gallery</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="dark-theme">
   <nav>
     <div class="logo">🔥 Video Gallery</div>
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
-    <div class="menu" id="menu">
-      <a href="#">Home</a>
-    </div>
+    <!-- Removed hamburger and extra menu -->
   </nav>
 
   <div class="container" style="margin-top: 80px;">
     <input type="text" placeholder="Search..." class="search-bar" oninput="handleSearch(this.value)" />
-    
-    <div id="videoGrid" class="grid grid-cols-2 md:grid-cols-3 mt-6"></div>
 
-    <div style="text-align:center; margin-top: 1rem;">
-      <button onclick="changePage(-1)" id="prevBtn">Prev</button>
-      <span id="pageNum">Page 1</span>
-      <button onclick="changePage(1)" id="nextBtn">Next</button>
-    </div>
+    <div id="videoGrid" class="video-grid"></div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="pagination"></div>
   </div>
+
+  <!-- Footer with Privacy & Terms -->
+  <footer>
+    <p><a href="privacy.html" target="_blank">Privacy Policy</a> | <a href="terms.html" target="_blank">Terms of Service</a></p>
+  </footer>
 
   <script src="videos.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
-
