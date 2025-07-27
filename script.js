@@ -1,110 +1,93 @@
+const videosPerPage = 10;
 let currentPage = 1;
-const videosPerPage = 6;
 let allVideos = [];
 
-function toggleMenu() {
-  document.getElementById("menu").classList.toggle("show");
+function loadVideos() {
+  // Example dummy data
+  allVideos = Array.from({ length: 43 }, (_, i) => ({
+    title: `Video Title ${i + 1}`,
+    thumbnail: `https://via.placeholder.com/640x360?text=Thumbnail+${i + 1}`,
+    link: `video.html?id=${i + 1}`
+  }));
+  displayVideos();
+  displayPagination();
 }
 
-fetch('videos.json')
-  .then(res => res.json())
-  .then(videos => {
-    allVideos = videos.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
-    renderVideos();
-  });
+function displayVideos() {
+  const grid = document.getElementById("videoGrid");
+  grid.innerHTML = "";
 
-function renderVideos() {
   const start = (currentPage - 1) * videosPerPage;
   const end = start + videosPerPage;
-  const grid = document.getElementById("videoGrid");
-  grid.innerHTML = "";
+  const currentVideos = allVideos.slice(start, end);
 
-  const paginated = allVideos.slice(start, end);
-  paginated.forEach(video => {
-    const card = document.createElement("div");
-    card.innerHTML = `
-      <a href="video.html?id=${video.id}">
-        <img src="${video.thumb}" style="width:510px; height:290px; object-fit:cover;" />
-        <div class="p-2">
-          <h4 class="font-bold text-sm">${video.title}</h4>
-        </div>
+  currentVideos.forEach(video => {
+    const videoEl = document.createElement("div");
+    videoEl.className = "video-item";
+    videoEl.innerHTML = `
+      <a href="${video.link}">
+        <img src="${video.thumbnail}" alt="${video.title}" />
+        <div class="video-title">${video.title}</div>
       </a>
     `;
-    grid.appendChild(card);
+    grid.appendChild(videoEl);
   });
-
-  renderPagination();
 }
 
-function renderPagination() {
+function displayPagination() {
   const totalPages = Math.ceil(allVideos.length / videosPerPage);
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
 
-  const prevBtn = `<button onclick="changePage(-1)" ${currentPage === 1 ? "disabled" : ""}>Prev</button>`;
-  const nextBtn = `<button onclick="changePage(1)" ${currentPage === totalPages ? "disabled" : ""}>Next</button>`;
+  const start = Math.max(1, currentPage - 1);
+  const end = Math.min(totalPages, start + 2);
 
-  let pageNumbers = "";
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers += `<button onclick="goToPage(${i})" ${i === currentPage ? "disabled" : ""}>${i}</button>`;
+  for (let i = start; i <= end; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = i === currentPage ? "active" : "";
+    btn.onclick = () => {
+      currentPage = i;
+      displayVideos();
+      displayPagination();
+    };
+    pagination.appendChild(btn);
   }
 
-  pagination.innerHTML = prevBtn + pageNumbers + nextBtn;
-}
-
-function changePage(step) {
-  const totalPages = Math.ceil(allVideos.length / videosPerPage);
-  currentPage += step;
-  if (currentPage < 1) currentPage = 1;
-  if (currentPage > totalPages) currentPage = totalPages;
-  renderVideos();
-}
-
-function goToPage(page) {
-  currentPage = page;
-  renderVideos();
-}
-
-function handleSearch(query) {
-  query = query.trim().toLowerCase();
-  if (query === "") {
-    fetch('videos.json')
-      .then(res => res.json())
-      .then(videos => {
-        allVideos = videos.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
-        currentPage = 1;
-        renderVideos();
-      });
-    return;
+  if (end < totalPages) {
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Next";
+    nextBtn.onclick = () => {
+      currentPage++;
+      displayVideos();
+      displayPagination();
+    };
+    pagination.appendChild(nextBtn);
   }
+}
 
-  const filtered = allVideos.filter(video =>
-    video.title.toLowerCase().includes(query)
-  );
-
+function handleSearch(value) {
+  const query = value.toLowerCase();
+  const filtered = allVideos.filter(video => video.title.toLowerCase().includes(query));
   const grid = document.getElementById("videoGrid");
-  const pagination = document.getElementById("pagination");
   grid.innerHTML = "";
-  pagination.innerHTML = "";
-
-  if (filtered.length === 0) {
-    grid.innerHTML = "<p>No videos found.</p>";
-    return;
-  }
 
   filtered.forEach(video => {
-    const card = document.createElement("div");
-    card.innerHTML = `
-      <a href="video.html?id=${video.id}">
-        <img src="${video.thumb}" style="width:510px; height:290px; object-fit:cover;" />
-        <div class="p-2">
-          <h4 class="font-bold text-sm">${video.title}</h4>
-        </div>
+    const videoEl = document.createElement("div");
+    videoEl.className = "video-item";
+    videoEl.innerHTML = `
+      <a href="${video.link}">
+        <img src="${video.thumbnail}" alt="${video.title}" />
+        <div class="video-title">${video.title}</div>
       </a>
     `;
-    grid.appendChild(card);
+    grid.appendChild(videoEl);
   });
+
+  document.getElementById("pagination").style.display = filtered.length === allVideos.length ? "block" : "none";
 }
+
+window.onload = loadVideos;
 
 
 
