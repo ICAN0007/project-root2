@@ -1,110 +1,63 @@
 let currentPage = 1;
-const videosPerPage = 10;
-let videos = [];
+const itemsPerPage = 10;
+let filteredVideos = [...videos].sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
 
-async function fetchVideos() {
-  try {
-    const response = await fetch('videos.json');
-    videos = await response.json();
-    renderVideos();
-    renderPagination();
-  } catch (error) {
-    console.error('Failed to load videos:', error);
-  }
+function toggleMenu() {
+  document.getElementById("menu").classList.toggle("show");
+}
+
+function formatDuration(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
 function renderVideos() {
-  const videoGrid = document.getElementById('video-grid');
-  videoGrid.innerHTML = '';
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageVideos = filteredVideos.slice(start, end);
+  
+  const grid = document.getElementById("videoGrid");
+  grid.innerHTML = "";
 
-  const start = (currentPage - 1) * videosPerPage;
-  const end = start + videosPerPage;
-  const videosToDisplay = videos.slice(start, end);
+  if (pageVideos.length === 0) {
+    grid.innerHTML = "<p>No videos found.</p>";
+    return;
+  }
 
-  videosToDisplay.forEach(video => {
-    const videoCard = document.createElement('div');
-    videoCard.className = 'bg-gray-800 rounded overflow-hidden shadow-lg';
-
-    videoCard.innerHTML = `
-      <a href="${video.url}" target="_blank">
-        <img src="${video.thumbnail}" alt="${video.title}" class="w-full object-cover" style="width:510px; height:290px;">
-        <div class="p-2 text-center">${video.title}</div>
-      </a>
+  pageVideos.forEach(video => {
+    const div = document.createElement("div");
+    div.className = "bg-gray-800 rounded shadow hover:shadow-lg p-2";
+    div.innerHTML = `
+      <video class="w-full h-40 object-cover" poster="${video.thumb}" controls>
+        <source src="${video.src}" type="video/mp4">
+      </video>
+      <div class="text-sm font-bold mt-1">${video.title}</div>
+      <div class="text-xs">${video.categories.join(", ")} | ${formatDuration(video.duration)}</div>
     `;
-
-    videoGrid.appendChild(videoCard);
+    grid.appendChild(div);
   });
 
-  const showMoreDiv = document.createElement('div');
-  showMoreDiv.className = 'col-span-full mt-6 text-center';
-  showMoreDiv.innerHTML = `
-    <a href="index.html" class="text-blue-400 underline">Show more from homepage</a>
-  `;
-  videoGrid.appendChild(showMoreDiv);
+  document.getElementById("pageNum").textContent = `Page ${currentPage}`;
+  document.getElementById("prevBtn").disabled = currentPage === 1;
+  document.getElementById("nextBtn").disabled = end >= filteredVideos.length;
 }
 
-function renderPagination() {
-  const paginationDiv = document.querySelector('.pagination');
-  if (!paginationDiv) {
-    const newPaginationDiv = document.createElement('div');
-    newPaginationDiv.className = 'pagination flex justify-center mt-6 space-x-2';
-    document.querySelector('main').appendChild(newPaginationDiv);
-  } else {
-    paginationDiv.innerHTML = '';
-  }
-
-  const totalPages = Math.ceil(videos.length / videosPerPage);
-
-  const pagination = document.querySelector('.pagination');
-
-  const prevBtn = document.createElement('button');
-  prevBtn.textContent = 'Prev';
-  prevBtn.className = 'px-3 py-1 bg-gray-700 rounded hover:bg-gray-600';
-  prevBtn.disabled = currentPage === 1;
-  prevBtn.onclick = () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderVideos();
-      renderPagination();
-    }
-  };
-  pagination.appendChild(prevBtn);
-
-  for (let i = 1; i <= totalPages; i++) {
-    const pageBtn = document.createElement('button');
-    pageBtn.textContent = i;
-    pageBtn.className = `px-3 py-1 rounded ${i === currentPage ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`;
-    pageBtn.onclick = () => {
-      currentPage = i;
-      renderVideos();
-      renderPagination();
-    };
-    pagination.appendChild(pageBtn);
-  }
-
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = 'Next';
-  nextBtn.className = 'px-3 py-1 bg-gray-700 rounded hover:bg-gray-600';
-  nextBtn.disabled = currentPage === totalPages;
-  nextBtn.onclick = () => {
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderVideos();
-      renderPagination();
-    }
-  };
-  pagination.appendChild(nextBtn);
-}
-
-document.getElementById('search').addEventListener('input', (e) => {
-  const keyword = e.target.value.toLowerCase();
-  const filtered = videos.filter(v => v.title.toLowerCase().includes(keyword));
-  currentPage = 1;
-  videos = filtered;
+function changePage(delta) {
+  currentPage += delta;
   renderVideos();
-  renderPagination();
-});
+}
 
-window.onload = fetchVideos;
+function handleSearch(query) {
+  currentPage = 1;
+  query = query.toLowerCase();
+  filteredVideos = videos
+    .filter(v => v.title.toLowerCase().includes(query) || v.categories.join(" ").toLowerCase().includes(query))
+    .sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+  renderVideos();
+}
+
+window.onload = renderVideos;
+
 
 
