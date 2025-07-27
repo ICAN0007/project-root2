@@ -2,28 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Video Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ExclusiveClips4 - Videos</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="home-icon">🏠</a>
-    <div class="nav-links">
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
+  <nav aria-label="Primary Navigation" role="navigation">
+    <a href="index.html" class="home-icon" aria-label="Home">🏠</a>
+    <button id="hamburger" aria-controls="nav-menu" aria-expanded="false" aria-label="Menu" class="hamburger">☰</button>
+    <div id="nav-menu" class="menu">
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms & Conditions</a>
     </div>
   </nav>
 
-  <div class="container">
-    <input type="text" placeholder="Search..." class="search-bar" oninput="handleSearch(this.value)" id="searchInput" />
-    <div id="videoGrid" class="video-grid"></div>
-    <div id="pagination" class="pagination"></div>
-  </div>
+  <main class="container pt-20">
+    <!-- Age Confirmation Modal -->
+    <div id="age-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="age-modal-title">
+      <div class="modal-content">
+        <h2 id="age-modal-title">Adults Only</h2>
+        <p>You must be 18+ to view this content. Confirm your age to proceed.</p>
+        <button id="age-yes" class="btn-primary">I am 18 or older</button>
+        <button id="age-no" class="btn-secondary">No, take me away</button>
+      </div>
+    </div>
+
+    <input type="search" id="searchInput" placeholder="Search videos..." aria-label="Search videos" class="search-bar" />
+
+    <div id="category-filters" class="category-filters" aria-label="Filter videos by category" role="region">
+      <!-- Buttons will be generated dynamically -->
+    </div>
+
+    <div id="videoGrid" class="video-grid" role="list"></div>
+
+    <div id="pagination" class="pagination" role="navigation" aria-label="Pagination"></div>
+  </main>
 
   <script src="script.js"></script>
 </body>
 </html>
-
 
 
