@@ -1,106 +1,103 @@
 body {
+  font-family: Arial, sans-serif;
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  padding: 0;
   background-color: #121212;
-  color: #f0f0f0;
+  color: white;
 }
 
-nav {
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #1f1f1f;
   display: flex;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background-color: #1e1e1e;
   align-items: center;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 10;
+  padding: 12px 20px;
+  z-index: 100;
 }
 
-.nav-left .home-icon {
-  font-size: 1.8rem;
+.home-icon {
+  font-size: 1.5rem;
+  color: white;
   text-decoration: none;
-  color: #fff;
 }
 
-.nav-right a {
-  margin-left: 20px;
+.nav-links a {
+  margin-left: 15px;
   color: #ccc;
   text-decoration: none;
   font-size: 1rem;
 }
 
-.nav-right a:hover {
-  text-decoration: underline;
-}
-
 .container {
-  margin-top: 90px;
   padding: 20px;
+  max-width: 1100px;
+  margin: 80px auto 0;
 }
 
 .search-bar {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
+  margin-bottom: 15px;
   border-radius: 6px;
   border: none;
   font-size: 1rem;
-  margin-bottom: 20px;
 }
 
-.video-grid {
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
 }
 
 .video-card {
-  background: #1e1e1e;
+  background-color: #1e1e1e;
+  padding: 10px;
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
-  transition: 0.3s ease-in-out;
+  transition: transform 0.3s;
+  cursor: pointer;
 }
 
 .video-card:hover {
-  transform: translateY(-5px);
+  transform: scale(1.03);
 }
 
-.video-card img {
+.video-thumb {
   width: 100%;
-  height: auto;
-  display: block;
+  border-radius: 6px;
 }
 
 .video-title {
-  padding: 12px;
-  font-weight: bold;
   font-size: 1rem;
-  color: #ddd;
+  margin-top: 8px;
+  color: #f1f1f1;
+  font-weight: 600;
   text-align: center;
 }
 
 .pagination {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  margin-top: 20px;
+  text-align: center;
 }
 
-.page-btn {
+.pagination button {
   background-color: #333;
-  color: #fff;
-  padding: 8px 14px;
+  color: white;
   border: none;
+  padding: 8px 12px;
+  margin: 0 5px;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 0.9rem;
 }
 
-.page-btn.active,
-.page-btn:hover {
-  background-color: #6200ea;
+.pagination button.active {
+  background-color: #f39c12;
 }
 
-
+.pagination button:hover {
+  background-color: #555;
+}
 
