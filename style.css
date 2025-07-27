@@ -1,109 +1,106 @@
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  background-color: #111;
-  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
 }
 
-.navbar {
+nav {
   display: flex;
   justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #1e1e1e;
   align-items: center;
-  background: #1c1c1c;
-  padding: 15px 25px;
   position: fixed;
-  top: 0;
   width: 100%;
-  z-index: 1000;
-  border-bottom: 1px solid #333;
+  top: 0;
+  z-index: 10;
 }
 
-.home-icon {
-  font-size: 28px;
+.nav-left .home-icon {
+  font-size: 1.8rem;
   text-decoration: none;
   color: #fff;
 }
 
-.right-nav a {
+.nav-right a {
   margin-left: 20px;
-  text-decoration: none;
   color: #ccc;
-  font-size: 16px;
+  text-decoration: none;
+  font-size: 1rem;
 }
 
-.right-nav a:hover {
-  color: #fff;
+.nav-right a:hover {
+  text-decoration: underline;
 }
 
 .container {
-  padding: 100px 20px 40px;
-  max-width: 800px;
-  margin: auto;
+  margin-top: 90px;
+  padding: 20px;
 }
 
 .search-bar {
   width: 100%;
   padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: none;
+  font-size: 1rem;
   margin-bottom: 20px;
-  background-color: #222;
-  color: white;
 }
 
 .video-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
 }
 
-.video-item {
-  background: #1a1a1a;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(255,255,255,0.1);
-  transition: transform 0.2s ease;
-}
-
-.video-item:hover {
-  transform: scale(1.01);
-}
-
-.video-item img {
-  width: 100%;
+.video-card {
+  background: #1e1e1e;
   border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  transition: 0.3s ease-in-out;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-card img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .video-title {
-  margin-top: 10px;
-  font-size: 18px;
+  padding: 12px;
   font-weight: bold;
-  color: #00ccff;
-  text-shadow: 1px 1px 3px #000;
-}
-
-.pagination {
-  margin-top: 30px;
+  font-size: 1rem;
+  color: #ddd;
   text-align: center;
 }
 
-.pagination button {
-  background-color: #222;
-  color: #ccc;
-  border: 1px solid #333;
-  padding: 8px 14px;
-  margin: 0 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 15px;
+.pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.pagination button:hover,
-.pagination button.active {
-  background-color: #00ccff;
-  color: #000;
-  font-weight: bold;
+.page-btn {
+  background-color: #333;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
+
+.page-btn.active,
+.page-btn:hover {
+  background-color: #6200ea;
+}
+
 
 
