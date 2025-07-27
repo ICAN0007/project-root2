@@ -2,56 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Watch Video</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Watch Video - ExclusiveClips4</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="text-2xl">🏠</a>
-    <div class="hamburger" id="hamburger">☰</div>
-    <div class="menu" id="menu">
+  <nav aria-label="Primary Navigation" role="navigation">
+    <a href="index.html" class="home-icon" aria-label="Home">🏠</a>
+    <button id="hamburger" aria-controls="nav-menu" aria-expanded="false" aria-label="Menu" class="hamburger">☰</button>
+    <div id="nav-menu" class="menu">
       <a href="index.html">Home</a>
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms & Conditions</a>
     </div>
   </nav>
 
-  <main class="pt-20 container">
-    <video id="video-player" class="video-player" controls></video>
-    <h2 id="video-title" class="text-3xl mt-6"></h2>
-    <h3 class="text-3xl mt-6">Related Videos</h3>
-    <div id="related-videos" class="related-grid"></div>
+  <main class="container pt-20">
+    <video id="video-player" class="video-player" controls playsinline preload="metadata" style="max-width: 100%;" aria-label="Video player">
+      Your browser does not support the video tag.
+    </video>
+    <h2 id="video-title" class="video-title mt-4"></h2>
+    <p id="video-duration" class="video-duration"></p>
+    <p id="video-description" class="video-description"></p>
+
+    <h3 class="related-header mt-6">Related Videos</h3>
+    <div id="related-videos" class="related-grid" role="list"></div>
+
+    <!-- Age Confirmation Modal -->
+    <div id="age-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="age-modal-title">
+      <div class="modal-content">
+        <h2 id="age-modal-title">Adults Only</h2>
+        <p>You must be 18+ to view this content. Confirm your age to proceed.</p>
+        <button id="age-yes" class="btn-primary">I am 18 or older</button>
+        <button id="age-no" class="btn-secondary">No, take me away</button>
+      </div>
+    </div>
   </main>
 
-  <script>
-    const menu = document.getElementById('menu');
-    document.getElementById('hamburger').onclick = () => menu.classList.toggle('show');
-
-    fetch('videos.json')
-      .then(res => res.json())
-      .then(videos => {
-        const params = new URLSearchParams(window.location.search);
-        const videoId = params.get('id');
-        const video = videos.find(v => v.id === videoId);
-
-        if (video) {
-          document.getElementById('video-player').src = video.src;
-          document.getElementById('video-title').textContent = video.title;
-        }
-
-        const relatedDiv = document.getElementById('related-videos');
-        const related = videos.filter(v => v.id !== videoId).sort(() => 0.5 - Math.random()).slice(0, 6);
-        related.forEach(v => {
-          const card = document.createElement('div');
-          card.innerHTML = `<a href="video.html?id=${v.id}">
-            <img src="${v.thumb}" class="w-full h-40 object-cover">
-            <div class="p-2"><h4 class="font-bold text-sm">${v.title}</h4></div>
-          </a>`;
-          relatedDiv.appendChild(card);
-        });
-      });
-  </script>
+  <script src="video.js"></script>
 </body>
 </html>
-
