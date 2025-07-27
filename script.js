@@ -38,7 +38,7 @@ function renderVideos() {
     card.className = "bg-gray-800 rounded shadow overflow-hidden hover:shadow-lg transition";
     card.innerHTML = `
       <a href="video.html?id=${v.id}">
-        <img src="${v.thumb}" alt="${v.title}" class="w-full h-40 object-cover">
+        <img src="${v.thumb}" alt="${v.title}" style="width: 510px; height: 290px; object-fit: cover;">
         <div class="p-2">
           <h3 class="font-bold text-sm truncate">${v.title}</h3>
           <p class="text-xs">${v.categories.join(", ")}</p>
