@@ -55,7 +55,6 @@ footer {
 }
 
 /* ✅ Grid Styles */
-
 .grid,
 .related-grid {
   display: flex;
@@ -67,6 +66,12 @@ footer {
   .grid {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+  }
+
+  body.related .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
   }
 
