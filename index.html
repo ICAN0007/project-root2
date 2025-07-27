@@ -6,89 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Video Gallery</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    /* Header styling */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #111;
-      padding: 15px 20px;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 999;
-      color: white;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 15px;
-      font-size: 18px;
-    }
-
-    .home-icon {
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 15px;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 100px auto 30px;
-      padding: 0 15px;
-    }
-
-    .search-bar {
-      width: 100%;
-      padding: 10px 15px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    /* Filter section */
-    .filter-bar {
-      margin-bottom: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .filter-tag {
-      background: #444;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .filter-tag:hover {
-      background: #222;
-    }
-
-    @media (max-width: 600px) {
-      nav {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .nav-links {
-        margin-top: 10px;
-      }
-    }
-  </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="home-icon">🏠 Home</a>
-    <div class="nav-links">
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="home-icon">🏠</a>
+    </div>
+    <div class="nav-right">
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </div>
@@ -96,12 +20,8 @@
 
   <div class="container">
     <input type="text" placeholder="Search..." class="search-bar" oninput="handleSearch(this.value)" id="searchInput" />
-
-    <!-- Filter Section -->
-    
-    <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6"></div>
-
-    <div id="pagination" style="text-align:center; margin-top: 1rem;"></div>
+    <div id="videoGrid" class="video-grid"></div>
+    <div id="pagination" class="pagination"></div>
   </div>
 
   <script src="script.js"></script>
