@@ -1,103 +1,67 @@
 let videos = [];
-let filteredVideos = [];
 let currentPage = 1;
-const itemsPerPage = 10;
+const itemsPerPage = 9;
 
-async function loadVideos() {
-  try {
-    const res = await fetch('videos.json');
-    const data = await res.json();
-    videos = data.reverse(); // latest first
-    filteredVideos = videos;
-    displayVideos(currentPage);
-    setupPagination();
-  } catch (error) {
-    console.error("Failed to load videos:", error);
-  }
-}
+fetch('videos.json')
+  .then(res => res.json())
+  .then(data => {
+    videos = data.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+    renderPage(currentPage);
+  });
 
-function displayVideos(page) {
-  const videoGrid = document.getElementById("videoGrid");
-  videoGrid.innerHTML = "";
-
+function renderPage(page) {
   const start = (page - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  const videosToShow = filteredVideos.slice(start, end);
+  const currentVideos = videos.slice(start, end);
 
-  if (videosToShow.length === 0) {
-    videoGrid.innerHTML = "<p>No videos found.</p>";
-    return;
-  }
+  const grid = document.getElementById('videoGrid');
+  grid.innerHTML = currentVideos.map(video => `
+    <div class="video-card" onclick="window.location.href='video.html?id=${video.id}'">
+      <img class="video-thumb" src="${video.thumb}" alt="${video.title}" />
+      <div class="video-title">${video.title}</div>
+    </div>
+  `).join('');
 
-  videosToShow.forEach(video => {
-    const card = document.createElement("div");
-    card.className = "video-card";
-    card.innerHTML = `
-      <a href="video.html?vid=${video.id}">
-        <img src="${video.thumbnail}" alt="${video.title}" />
-        <div class="video-title">${video.title}</div>
-      </a>
-    `;
-    videoGrid.appendChild(card);
-  });
+  renderPagination(page);
 }
 
-function setupPagination() {
-  const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
-  const pagination = document.getElementById("pagination");
-  pagination.innerHTML = "";
+function renderPagination(page) {
+  const totalPages = Math.ceil(videos.length / itemsPerPage);
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML = '';
 
-  let maxVisible = 3;
-  let start = Math.max(1, currentPage - 1);
-  let end = Math.min(totalPages, start + maxVisible - 1);
+  let start = Math.max(1, page - 1);
+  let end = Math.min(totalPages, page + 1);
 
   if (start > 1) {
-    pagination.appendChild(createPageButton("1"));
-    if (start > 2) pagination.appendChild(createEllipsis());
+    pagination.innerHTML += `<button onclick="changePage(1)">1</button>`;
+    if (start > 2) pagination.innerHTML += `<span style="color:gray;">...</span>`;
   }
 
   for (let i = start; i <= end; i++) {
-    pagination.appendChild(createPageButton(i));
+    pagination.innerHTML += `<button class="${i === page ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
   }
 
   if (end < totalPages) {
-    if (end < totalPages - 1) pagination.appendChild(createEllipsis());
-    pagination.appendChild(createPageButton(totalPages));
+    if (end < totalPages - 1) pagination.innerHTML += `<span style="color:gray;">...</span>`;
+    pagination.innerHTML += `<button onclick="changePage(${totalPages})">${totalPages}</button>`;
   }
 }
 
-function createPageButton(page) {
-  const btn = document.createElement("button");
-  btn.textContent = page;
-  btn.className = "page-btn";
-  if (parseInt(page) === currentPage) btn.classList.add("active");
-
-  btn.addEventListener("click", () => {
-    currentPage = parseInt(page);
-    displayVideos(currentPage);
-    setupPagination();
-  });
-
-  return btn;
-}
-
-function createEllipsis() {
-  const span = document.createElement("span");
-  span.textContent = "...";
-  span.style.color = "#999";
-  return span;
+function changePage(page) {
+  currentPage = page;
+  renderPage(currentPage);
 }
 
 function handleSearch(query) {
-  query = query.toLowerCase();
-  filteredVideos = videos.filter(video => video.title.toLowerCase().includes(query));
-  currentPage = 1;
-  displayVideos(currentPage);
-  setupPagination();
+  const filtered = videos.filter(v => v.title.toLowerCase().includes(query.toLowerCase()));
+  const grid = document.getElementById('videoGrid');
+  grid.innerHTML = filtered.map(video => `
+    <div class="video-card" onclick="window.location.href='video.html?id=${video.id}'">
+      <img class="video-thumb" src="${video.thumb}" alt="${video.title}" />
+      <div class="video-title">${video.title}</div>
+    </div>
+  `).join('');
 }
-
-loadVideos();
-
-
 
 
