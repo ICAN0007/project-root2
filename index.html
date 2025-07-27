@@ -2,12 +2,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ExclusiveClips4</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .video-thumb {
+      width: 510px;
+      height: 290px;
+      object-fit: cover;
+    }
+  </style>
 </head>
 <body class="bg-black text-white font-sans">
 
@@ -21,12 +28,16 @@
 
   <!-- Main Content -->
   <main class="pt-24 container mx-auto px-4">
-    <input type="text" id="search" class="search-bar w-full p-2 mb-4 text-black" placeholder="Search videos...">
+    <input type="text" id="search" class="w-full p-2 mb-4 text-black rounded" placeholder="Search videos..." />
     <div class="filter-bar mb-4" id="filter-bar"></div>
-    <div id="video-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-    <div class="mt-6 text-center">
-      <button id="prevPage" class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600">Prev</button>
-      <button id="nextPage" class="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600">Next</button>
+    <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center"></div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="mt-6 flex justify-center items-center gap-2 flex-wrap"></div>
+
+    <!-- Show More -->
+    <div class="text-center mt-6">
+      <a href="index.html" class="px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded">Show More Videos</a>
     </div>
   </main>
 
@@ -42,4 +53,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
