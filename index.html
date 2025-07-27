@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Video Gallery</title>
+  <title>exclusiveclpis</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav class="navbar">
-    <div class="left-nav">
+  <nav>
+    <div class="nav-left">
       <a href="index.html" class="home-icon">🏠</a>
     </div>
-    <div class="right-nav">
+    <div class="nav-right">
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </div>
@@ -20,9 +20,7 @@
 
   <div class="container">
     <input type="text" placeholder="Search..." class="search-bar" oninput="handleSearch(this.value)" id="searchInput" />
-
     <div id="videoGrid" class="video-grid"></div>
-
     <div id="pagination" class="pagination"></div>
   </div>
 
