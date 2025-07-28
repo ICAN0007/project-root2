@@ -1,226 +1,168 @@
-let allVideos = [];
-let currentPage = 1;
-const videosPerPage = 6;
+const isAdmin = false; // Set this to true to see like/dislike counts (admin only)
 
-const videoGrid = document.getElementById('videoGrid');
-const pagination = document.getElementById('pagination');
-const searchInput = document.getElementById('searchInput');
-const categoryFiltersContainer = document.getElementById('category-filters');
-const hashtagFiltersContainer = document.getElementById('hashtag-filters');
+const menu = document.getElementById('nav-menu');
+const hamburger = document.getElementById('hamburger');
+const ageModal = document.getElementById('age-modal');
+const ageYesBtn = document.getElementById('age-yes');
+const ageNoBtn = document.getElementById('age-no');
 
-const viralBtn = document.getElementById('viralBtn');
-const latestBtn = document.getElementById('latestBtn');
+const likeBtn = document.getElementById('like-btn');
+const dislikeBtn = document.getElementById('dislike-btn');
+const likeCountsDiv = document.getElementById('like-counts');
+const videoCategoriesDiv = document.getElementById('video-categories');
+const videoTagsDiv = document.getElementById('video-tags');
 
-let activeCategory = 'all';
-let activeHashtag = '';
+let videoId = null;
 
-async function fetchVideos() {
-  try {
-    const res = await fetch('videos.json');
-    const data = await res.json();
-    allVideos = data.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
-    createCategoryFilters();
-    createHashtagFilters();
-    renderPage(1);
-  } catch (err) {
-    console.error('Failed to load videos:', err);
-    videoGrid.innerHTML = '<div class="no-results">Failed to load videos.</div>';
-  }
-}
-
-// CATEGORY FILTERS
-function createCategoryFilters() {
-  const categoriesSet = new Set();
-  allVideos.forEach(video => video.categories.forEach(cat => categoriesSet.add(cat)));
-
-  const categories = ['all', ...Array.from(categoriesSet)];
-  categoryFiltersContainer.innerHTML = categories
-    .map(cat => `<button class="category-btn" data-category="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`)
-    .join('');
-  categoryFiltersContainer.querySelectorAll('.category-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterByCategory(btn.dataset.category);
-    });
-  });
-}
-
-function filterByCategory(category) {
-  activeCategory = category;
-  activeHashtag = '';
-  setActiveCategory(category);
-  setActiveHashtag('');
-  setQuickFilterActive(null);
-  searchInput.value = '';
-  renderPage(1);
-}
-
-function setActiveCategory(category) {
-  categoryFiltersContainer.querySelectorAll('.category-btn').forEach(btn =>
-    btn.classList.toggle('active', btn.dataset.category === category));
-}
-
-// HASHTAG FILTERS
-function createHashtagFilters() {
-  const tagsSet = new Set();
-  allVideos.forEach(video => video.tags?.forEach(tag => tagsSet.add(tag)));
-  const hashtags = ['all', ...Array.from(tagsSet)];
-  hashtagFiltersContainer.innerHTML = hashtags
-    .map(tag => `<button class="hashtag-btn" data-hashtag="${tag}">#${tag.charAt(0).toUpperCase() + tag.slice(1)}</button>`)
-    .join('');
-  hashtagFiltersContainer.querySelectorAll('.hashtag-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterByHashtag(btn.dataset.hashtag);
-    });
-  });
-}
-
-function filterByHashtag(hashtag) {
-  activeHashtag = hashtag;
-  activeCategory = 'all';
-  setActiveHashtag(hashtag);
-  setActiveCategory('');
-  setQuickFilterActive(null);
-  searchInput.value = '';
-  renderPage(1);
-}
-
-function setActiveHashtag(tag) {
-  hashtagFiltersContainer.querySelectorAll('.hashtag-btn').forEach(btn =>
-    btn.classList.toggle('active', btn.dataset.hashtag === tag));
-}
-
-// PAGINATION AND RENDERING
-function renderPage(page) {
-  currentPage = page;
-
-  let filteredVideos = allVideos;
-
-  if (activeCategory !== 'all' && activeCategory) {
-    filteredVideos = allVideos.filter(video => video.categories.includes(activeCategory));
-  } else if (activeHashtag !== 'all' && activeHashtag) {
-    filteredVideos = allVideos.filter(video => video.tags?.includes(activeHashtag));
-  }
-
-  const start = (page - 1) * videosPerPage;
-  const end = start + videosPerPage;
-  const paginatedVideos = filteredVideos.slice(start, end);
-
-  renderVideoCards(paginatedVideos);
-  renderPagination(filteredVideos.length);
-}
-
-function renderVideoCards(videos) {
-  videoGrid.innerHTML = videos.length === 0
-    ? '<div class="no-results">No videos found.</div>'
-    : videos.map(video => `
-      <a href="video.html?id=${video.id}" class="video-card-link" role="listitem" aria-label="Watch ${video.title}">
-        <div class="video-card">
-          <img src="${video.thumb}" loading="lazy" alt="${video.title} thumbnail" class="video-thumb" />
-          <div class="video-title">${video.title}</div>
-        </div>
-      </a>
-    `).join('');
-}
-
-function renderPagination(totalVideos) {
-  const totalPages = Math.ceil(totalVideos / videosPerPage);
-  pagination.innerHTML = '';
-
-  if (totalPages <= 1) return;
-
-  if (currentPage > 1) {
-    const prevBtn = document.createElement('button');
-    prevBtn.innerText = '← Prev';
-    prevBtn.onclick = () => renderPage(currentPage - 1);
-    pagination.appendChild(prevBtn);
-  }
-
-  for (let i = 1; i <= totalPages; i++) {
-    const btn = document.createElement('button');
-    btn.innerText = i;
-    if (i === currentPage) btn.classList.add('active');
-    btn.onclick = () => renderPage(i);
-    pagination.appendChild(btn);
-  }
-
-  if (currentPage < totalPages) {
-    const nextBtn = document.createElement('button');
-    nextBtn.innerText = 'Next →';
-    nextBtn.onclick = () => renderPage(currentPage + 1);
-    pagination.appendChild(nextBtn);
-  }
-}
-
-// SEARCH
-function handleSearch() {
-  const query = searchInput.value.trim().toLowerCase();
-  if (!query) {
-    activeCategory = 'all';
-    activeHashtag = '';
-    setActiveCategory('all');
-    setActiveHashtag('');
-    setQuickFilterActive(null);
-    renderPage(1);
-    return;
-  }
-  const filtered = allVideos.filter(v => v.title.toLowerCase().includes(query));
-  renderFiltered(filtered);
-  setActiveCategory('');
-  setActiveHashtag('');
-  setQuickFilterActive(null);
-}
-
-function renderFiltered(videos) {
-  if (videos.length === 0) {
-    videoGrid.innerHTML = '<div class="no-results">No videos found.</div>';
-    pagination.innerHTML = '';
-    return;
-  }
-  renderVideoCards(videos);
-  pagination.innerHTML = '';
-}
-
-searchInput.addEventListener('input', handleSearch);
-
-// QUICK FILTER BUTTONS (Viral, Latest)
-function setQuickFilterActive(type) {
-  viralBtn.classList.toggle('active', type === 'viral');
-  latestBtn.classList.toggle('active', type === 'latest');
-}
-
-viralBtn.addEventListener('click', () => {
-  activeCategory = 'viral';
-  activeHashtag = '';
-  setActiveCategory('viral');
-  setActiveHashtag('');
-  setQuickFilterActive('viral');
-  searchInput.value = '';
-  renderPage(1);
-});
-
-latestBtn.addEventListener('click', () => {
-  activeCategory = 'latest';
-  activeHashtag = '';
-  setActiveCategory('latest');
-  setActiveHashtag('');
-  setQuickFilterActive('latest');
-  searchInput.value = '';
-  renderPage(1);
-});
-
-// Reset quick filters when search or other filters used
-searchInput.addEventListener('input', () => setQuickFilterActive(null));
-categoryFiltersContainer.addEventListener('click', () => setQuickFilterActive(null));
-hashtagFiltersContainer.addEventListener('click', () => setQuickFilterActive(null));
-
-// Hamburger toggle
-document.getElementById('hamburger').addEventListener('click', () => {
-  const menu = document.getElementById('nav-menu');
+hamburger.addEventListener('click', () => {
   const expanded = menu.classList.toggle('show');
-  document.getElementById('hamburger').setAttribute('aria-expanded', expanded);
+  hamburger.setAttribute('aria-expanded', expanded);
 });
 
-fetchVideos();
+function updateLikeDislikeUI(likes, dislikes, userStatus) {
+  likeBtn.style.fontWeight = userStatus === 'liked' ? 'bold' : 'normal';
+  dislikeBtn.style.fontWeight = userStatus === 'disliked' ? 'bold' : 'normal';
+
+  if (isAdmin) {
+    likeCountsDiv.style.display = 'block';
+    likeCountsDiv.textContent = `Likes: ${likes} | Dislikes: ${dislikes}`;
+  } else {
+    likeCountsDiv.style.display = 'none';
+  }
+}
+
+function getCounts() {
+  const counts = JSON.parse(localStorage.getItem('video_likes_dislikes') || '{}');
+  return counts[videoId] || { likes: 0, dislikes: 0 };
+}
+
+function setCounts(likes, dislikes) {
+  const counts = JSON.parse(localStorage.getItem('video_likes_dislikes') || '{}');
+  counts[videoId] = { likes, dislikes };
+  localStorage.setItem('video_likes_dislikes', JSON.stringify(counts));
+}
+
+function getUserStatus() {
+  return localStorage.getItem(`video_user_status_${videoId}`) || 'none';
+}
+
+function setUserStatus(status) {
+  localStorage.setItem(`video_user_status_${videoId}`, status);
+}
+
+function likeClickHandler() {
+  const currentStatus = getUserStatus();
+  let counts = getCounts();
+
+  if (currentStatus === 'liked') {
+    counts.likes--;
+    setUserStatus('none');
+  } else {
+    if (currentStatus === 'disliked') counts.dislikes--;
+    counts.likes++;
+    setUserStatus('liked');
+  }
+  setCounts(counts.likes, counts.dislikes);
+  updateLikeDislikeUI(counts.likes, counts.dislikes, getUserStatus());
+}
+
+function dislikeClickHandler() {
+  const currentStatus = getUserStatus();
+  let counts = getCounts();
+
+  if (currentStatus === 'disliked') {
+    counts.dislikes--;
+    setUserStatus('none');
+  } else {
+    if (currentStatus === 'liked') counts.likes--;
+    counts.dislikes++;
+    setUserStatus('disliked');
+  }
+  setCounts(counts.likes, counts.dislikes);
+  updateLikeDislikeUI(counts.likes, counts.dislikes, getUserStatus());
+}
+
+async function loadVideo() {
+  try {
+    const response = await fetch('videos.json');
+    const videos = await response.json();
+
+    const params = new URLSearchParams(window.location.search);
+    videoId = params.get('id');
+    const video = videos.find(v => v.id === videoId);
+
+    if (!video) {
+      document.getElementById('video-title').textContent = "Video not found.";
+      document.getElementById('video-player').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('video-player').src = video.src;
+    document.getElementById('video-title').textContent = video.title;
+    document.getElementById('video-description').textContent = video.description || '';
+
+    // Display categories and tags
+    videoCategoriesDiv.textContent = `Categories: ${video.categories.join(', ')}`;
+    videoTagsDiv.textContent = `Tags: ${video.tags ? video.tags.join(', ') : 'None'}`;
+
+    // Initialize like/dislike buttons & counts
+    const counts = getCounts();
+    updateLikeDislikeUI(counts.likes, counts.dislikes, getUserStatus());
+
+    likeBtn.onclick = likeClickHandler;
+    dislikeBtn.onclick = dislikeClickHandler;
+
+    // Load related videos (your existing related videos code here)
+    let related = videos.filter(v =>
+      v.id !== videoId && v.categories.some(cat => video.categories.includes(cat))
+    );
+
+    if (related.length === 0) {
+      related = videos.filter(v => v.id !== videoId).sort(() => 0.5 - Math.random());
+    }
+    related = related.slice(0, 6);
+
+    const relatedDiv = document.getElementById('related-videos');
+    relatedDiv.innerHTML = '';
+    related.forEach(v => {
+      const card = document.createElement('div');
+      card.innerHTML = `
+        <a href="video.html?id=${v.id}" class="related-video-link" aria-label="Watch ${v.title}">
+          <img src="${v.thumb}" loading="lazy" alt="${v.title} thumbnail" class="video-thumb" />
+          <div class="video-title">${v.title}</div>
+        </a>
+      `;
+      relatedDiv.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error('Failed to load video data:', err);
+  }
+}
+
+function checkAgeConfirmation() {
+  const confirmed = localStorage.getItem('age_confirmed');
+  if (!confirmed) {
+    ageModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  } else {
+    loadVideo();
+  }
+}
+
+ageYesBtn.addEventListener('click', () => {
+  localStorage.setItem('age_confirmed', '1');
+  ageModal.classList.add('hidden');
+  document.body.style.overflow = '';
+  loadVideo();
+});
+
+ageNoBtn.addEventListener('click', () => {
+  window.location.href = 'https://google.com';
+});
+
+// Run on page load
+checkAgeConfirmation();
 
 
 
