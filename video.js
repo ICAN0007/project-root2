@@ -9,12 +9,6 @@ hamburger.addEventListener('click', () => {
   hamburger.setAttribute('aria-expanded', expanded);
 });
 
-function formatDuration(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
-
 async function loadVideo() {
   try {
     const response = await fetch('videos.json');
@@ -33,13 +27,6 @@ async function loadVideo() {
     document.getElementById('video-player').src = video.src;
     document.getElementById('video-title').textContent = video.title;
     document.getElementById('video-description').textContent = video.description || '';
-    document.getElementById('video-duration').textContent = `Duration: ${formatDuration(video.duration)}`;
-
-    // Track views locally
-    const viewKey = `video_views_${video.id}`;
-    let views = +localStorage.getItem(viewKey) || 0;
-    views++;
-    localStorage.setItem(viewKey, views);
 
     // Related videos by category
     let related = videos.filter(v =>
@@ -89,5 +76,4 @@ ageNoBtn.addEventListener('click', () => {
   window.location.href = 'https://google.com';
 });
 
-// Run on page load
 checkAgeConfirmation();
