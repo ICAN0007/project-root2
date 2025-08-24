@@ -1,16 +1,14 @@
 let allVideos = [];
 let currentPage = 1;
 const videosPerPage = 6;
-
 const videoGrid = document.getElementById('videoGrid');
 const pagination = document.getElementById('pagination');
 const searchInput = document.getElementById('searchInput');
 const categoryFiltersContainer = document.getElementById('category-filters');
 const hashtagFiltersContainer = document.getElementById('hashtag-filters');
-
 const viralBtn = document.getElementById('viralBtn');
 const latestBtn = document.getElementById('latestBtn');
-
+const instaBtn = document.getElementById('instaBtn'); // Added Insta Leak button element here
 let activeCategory = 'all';
 let activeHashtag = '';
 
@@ -27,12 +25,10 @@ async function fetchVideos() {
     videoGrid.innerHTML = '<div class="no-results">Failed to load videos.</div>';
   }
 }
-
 // CATEGORY FILTERS
 function createCategoryFilters() {
   const categoriesSet = new Set();
   allVideos.forEach(video => video.categories.forEach(cat => categoriesSet.add(cat)));
-
   const categories = ['all', ...Array.from(categoriesSet)];
   categoryFiltersContainer.innerHTML = categories
     .map(cat => `<button class="category-btn" data-category="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`)
@@ -43,7 +39,6 @@ function createCategoryFilters() {
     });
   });
 }
-
 function filterByCategory(category) {
   activeCategory = category;
   activeHashtag = '';
@@ -53,12 +48,10 @@ function filterByCategory(category) {
   searchInput.value = '';
   renderPage(1);
 }
-
 function setActiveCategory(category) {
   categoryFiltersContainer.querySelectorAll('.category-btn').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.category === category));
 }
-
 // HASHTAG FILTERS
 function createHashtagFilters() {
   const tagsSet = new Set();
@@ -73,7 +66,6 @@ function createHashtagFilters() {
     });
   });
 }
-
 function filterByHashtag(hashtag) {
   activeHashtag = hashtag;
   activeCategory = 'all';
@@ -83,32 +75,25 @@ function filterByHashtag(hashtag) {
   searchInput.value = '';
   renderPage(1);
 }
-
 function setActiveHashtag(tag) {
   hashtagFiltersContainer.querySelectorAll('.hashtag-btn').forEach(btn =>
     btn.classList.toggle('active', btn.dataset.hashtag === tag));
 }
-
 // PAGINATION AND RENDERING
 function renderPage(page) {
   currentPage = page;
-
   let filteredVideos = allVideos;
-
   if (activeCategory !== 'all' && activeCategory) {
     filteredVideos = allVideos.filter(video => video.categories.includes(activeCategory));
   } else if (activeHashtag !== 'all' && activeHashtag) {
     filteredVideos = allVideos.filter(video => video.tags?.includes(activeHashtag));
   }
-
   const start = (page - 1) * videosPerPage;
   const end = start + videosPerPage;
   const paginatedVideos = filteredVideos.slice(start, end);
-
   renderVideoCards(paginatedVideos);
   renderPagination(filteredVideos.length);
 }
-
 function renderVideoCards(videos) {
   videoGrid.innerHTML = videos.length === 0
     ? '<div class="no-results">No videos found.</div>'
@@ -121,20 +106,16 @@ function renderVideoCards(videos) {
       </a>
     `).join('');
 }
-
 function renderPagination(totalVideos) {
   const totalPages = Math.ceil(totalVideos / videosPerPage);
   pagination.innerHTML = '';
-
   if (totalPages <= 1) return;
-
   if (currentPage > 1) {
     const prevBtn = document.createElement('button');
     prevBtn.innerText = '← Prev';
     prevBtn.onclick = () => renderPage(currentPage - 1);
     pagination.appendChild(prevBtn);
   }
-
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement('button');
     btn.innerText = i;
@@ -142,7 +123,6 @@ function renderPagination(totalVideos) {
     btn.onclick = () => renderPage(i);
     pagination.appendChild(btn);
   }
-
   if (currentPage < totalPages) {
     const nextBtn = document.createElement('button');
     nextBtn.innerText = 'Next →';
@@ -150,7 +130,6 @@ function renderPagination(totalVideos) {
     pagination.appendChild(nextBtn);
   }
 }
-
 // SEARCH
 function handleSearch() {
   const query = searchInput.value.trim().toLowerCase();
@@ -169,7 +148,6 @@ function handleSearch() {
   setActiveHashtag('');
   setQuickFilterActive(null);
 }
-
 function renderFiltered(videos) {
   if (videos.length === 0) {
     videoGrid.innerHTML = '<div class="no-results">No videos found.</div>';
@@ -179,15 +157,15 @@ function renderFiltered(videos) {
   renderVideoCards(videos);
   pagination.innerHTML = '';
 }
-
 searchInput.addEventListener('input', handleSearch);
-
-// QUICK FILTER BUTTONS (Viral, Latest)
+// QUICK FILTER BUTTONS (Viral, Latest, INSTALeak)
 function setQuickFilterActive(type) {
   viralBtn.classList.toggle('active', type === 'viral');
   latestBtn.classList.toggle('active', type === 'latest');
+  if(typeof instaBtn !== 'undefined' && instaBtn !== null) {
+    instaBtn.classList.toggle('active', type === 'insta');
+  }
 }
-
 viralBtn.addEventListener('click', () => {
   activeCategory = 'viral';
   activeHashtag = '';
@@ -197,7 +175,6 @@ viralBtn.addEventListener('click', () => {
   searchInput.value = '';
   renderPage(1);
 });
-
 latestBtn.addEventListener('click', () => {
   activeCategory = 'latest';
   activeHashtag = '';
@@ -208,18 +185,34 @@ latestBtn.addEventListener('click', () => {
   renderPage(1);
 });
 
+// ADDING Instaleak filter button functionality
+if(typeof instaBtn !== 'undefined' && instaBtn !== null) {
+  instaBtn.addEventListener('click', () => {
+    activeCategory = '';
+    activeHashtag = '';
+    setActiveCategory('');
+    setActiveHashtag('');
+    setQuickFilterActive('insta');
+    searchInput.value = '';
+
+    // Filter videos by category or tag 'insta leak' (case insensitive)
+    const filtered = allVideos.filter(v =>
+      (v.categories && v.categories.some(c => c.toLowerCase() === 'insta leak')) ||
+      (v.tags && v.tags.some(t => t.toLowerCase() === 'insta leak'))
+    );
+    renderFiltered(filtered);
+  });
+}
 // Reset quick filters when search or other filters used
 searchInput.addEventListener('input', () => setQuickFilterActive(null));
 categoryFiltersContainer.addEventListener('click', () => setQuickFilterActive(null));
 hashtagFiltersContainer.addEventListener('click', () => setQuickFilterActive(null));
-
 // Hamburger menu
 document.getElementById('hamburger').addEventListener('click', () => {
   const menu = document.getElementById('nav-menu');
   const expanded = menu.classList.toggle('show');
   document.getElementById('hamburger').setAttribute('aria-expanded', expanded);
 });
-
 fetchVideos();
 
 
